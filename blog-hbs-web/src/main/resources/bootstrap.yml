@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: blog-gateway
+server:
+  port: 9000
