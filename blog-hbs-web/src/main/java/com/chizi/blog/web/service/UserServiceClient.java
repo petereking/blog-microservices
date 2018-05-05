@@ -1,30 +1,24 @@
 package com.chizi.blog.web.service;
 
 import org.springframework.cloud.netflix.feign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.chizi.blog.web.model.User;
 import com.chizi.blog.web.service.fallback.UserServiceFallbackFactory;
 
-/**
- * DATE: 17/1/13 下午3:48 <br>
- * MAIL: zhanghecheng@terminus.io <br>
- * AUTHOR: zhanghecheng
- */
 @FeignClient(value = "blog-user", fallbackFactory = UserServiceFallbackFactory.class)
 @RequestMapping("/v1/blog/users")
 public interface UserServiceClient {
+  @PostMapping("")
+  Long createUser(@RequestBody User user);
 
-    @RequestMapping(value = "", method = RequestMethod.POST)
-    Long createUser(@RequestBody User user);
+  @GetMapping("/{id}")
+  User findUserById(@PathVariable("id") Long id);
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    User findUserById(@PathVariable("id") Long id);
-
-    @RequestMapping(value = "/name/{name}", method = RequestMethod.GET)
-    User findUserByName(@PathVariable("name") String name);
-
+  @GetMapping("/name/{name}")
+  User findUserByName(@PathVariable("name") String name);
 }

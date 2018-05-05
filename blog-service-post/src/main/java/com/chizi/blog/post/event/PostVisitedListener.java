@@ -10,37 +10,27 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 
-/**
- * DATE: 17/1/10 下午10:34 <br>
- * MAIL: hechengopen@gmail.com <br>
- * AUTHOR: zhacker
- *
- * 计算博客的PV
- *
- */
 @Component
 @Slf4j
 public class PostVisitedListener {
+  @Autowired
+  private EventBus eventBus;
 
-    @Autowired
-    private EventBus eventBus;
+  @PostConstruct
+  private void init() {
+    eventBus.register(this);
+  }
 
-    @PostConstruct
-    private void init(){
-        eventBus.register(this);
-    }
+  @Autowired
+  private PostRepo postRepo;
 
-    @Autowired
-    private PostRepo postRepo;
+  @Subscribe
+  public void onPostVisited(PostVisitedEvent event) {
+    log.info("user({}) visit post({})", event.getVisitorId(), event.getPostId());
 
-    @Subscribe
-    public void onPostVisited(PostVisitedEvent event){
-        log.info("user({}) visit post({})", event.getVisitorId(), event.getPostId());
+    Post post = postRepo.findOne(event.getPostId());
+    post.setPv(post.getPv() + 1);
 
-        Post post = postRepo.findOne(event.getPostId());
-        post.setPv(post.getPv()+1);
-
-        postRepo.save(post);
-    }
-
+    postRepo.save(post);
+  }
 }

@@ -7,13 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.chizi.blog.comment.model.Comment;
 
-/**
- * DATE: 2017/4/10 <br>
- * MAIL: hechengopen@gmail.com <br>
- * AUTHOR: zhacker
- */
 @Repository
 public interface CommentRepo extends PagingAndSortingRepository<Comment, String> {
-
-    Page<Comment> findByPostId(String postId, Pageable pageable);
+  Page<Comment> findByPostId(String postId, Pageable pageable);
 }

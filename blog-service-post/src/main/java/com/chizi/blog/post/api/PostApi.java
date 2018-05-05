@@ -1,56 +1,54 @@
 package com.chizi.blog.post.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.chizi.blog.common.Paging;
 import com.chizi.blog.post.dto.PostPagingCriteria;
 import com.chizi.blog.post.model.Post;
 import com.chizi.blog.post.service.PostService;
 
-/**
- * DATE: 17/1/5 上午10:55 <br>
- * MAIL: hechengopen@gmail.com <br>
- * AUTHOR: zhacker
- *
- * 博客视图
- */
 @RestController
 @RequestMapping("/v1/blog/posts")
-public class PostApi{
+public class PostApi {
+  private final PostService postService;
 
-    private final PostService postService;
+  @Autowired
+  public PostApi(PostService postService) {
+    this.postService = postService;
+  }
 
-    @Autowired
-    public PostApi(PostService postService) {
-        this.postService = postService;
-    }
+  @PostMapping("")
+  public String createPost(@RequestBody Post post) {
+    return postService.createPost(post);
+  }
 
-    @RequestMapping(value = "", method = RequestMethod.POST)
-    public String createPost(@RequestBody Post post){
-        return postService.createPost(post);
-    }
+  @DeleteMapping("/{id}")
+  public Boolean deletePost(@PathVariable String id, @RequestParam String operatorId) {
+    return postService.deletePostById(id, operatorId);
+  }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public Boolean deletePost(@PathVariable String id,
-                              @RequestParam String operatorId){
-        return postService.deletePostById(id, operatorId);
-    }
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public Boolean updatePost(@PathVariable String id,
-                              @RequestParam String title,
-                              @RequestParam String content,
-                              @RequestParam String operatorId){
-        return postService.updatePostTitleAndContent(id, title, content, operatorId);
-    }
+  @PutMapping("/{id}")
+  public Boolean updatePost(@PathVariable String id, @RequestParam String title,
+      @RequestParam String content, @RequestParam String operatorId) {
+    return postService.updatePostTitleAndContent(id, title, content, operatorId);
+  }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public Post findPost(@PathVariable String id, @RequestParam(required = false) String operatorId){
-        return postService.findPostById(id, operatorId);
-    }
+  @GetMapping("/{id}")
+  public Post findPost(@PathVariable String id, @RequestParam(required = false) String operatorId) {
+    return postService.findPostById(id, operatorId);
+  }
 
-    @RequestMapping(value = "", method = RequestMethod.GET)
-    public Paging<Post> paging(PostPagingCriteria criteria){
-        return postService.pagingPosts(criteria);
-    }
+  @GetMapping("")
+  public Paging<Post> paging(PostPagingCriteria criteria) {
+    return postService.pagingPosts(criteria);
+  }
 }

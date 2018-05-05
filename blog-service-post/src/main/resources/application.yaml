@@ -7,7 +7,7 @@ spring:
   data:
     mongodb:
       database: blog
-      host: 192.168.20.38
+      host: localhost
 #      name: root
 #      password: root
 
